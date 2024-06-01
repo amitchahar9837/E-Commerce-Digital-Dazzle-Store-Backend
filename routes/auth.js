@@ -2,18 +2,20 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const router = express.Router();
 const userModel = require('../model/user');
-
+const emailUser = process.env.emailUser;
+const emailPassword = process.env.emailPassword;
 const jwt = require('jsonwebtoken')
 const nodemailer = require('nodemailer');
 const randmonstring = require('randomstring');
 const JWT_SECRET = process.env.JWT_SECRET;
 const sendResetPasswordMail = async (name, email, token) => {
     try {
-        let transporter = await nodemailer.createTransport({
+
+        let transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
-                user: emailUser,
-                pass: emailPassword
+                user : emailUser,
+                pass: emailPassword,
             }
         });
 
@@ -26,17 +28,11 @@ const sendResetPasswordMail = async (name, email, token) => {
 
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
-                console.log(error)
-            } else {
-                console.log("mail has been sent:", info.response)
+                console.log(error.message)
             }
         })
     } catch (error) {
-        res.status(401).json({
-            err: error.message,
-            success: false,
-            error: true,
-        })
+        console.log(error.message);
     }
 }
 router.post('/signup', async (req, res) => {
