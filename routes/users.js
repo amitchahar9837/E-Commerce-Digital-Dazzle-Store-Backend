@@ -15,17 +15,18 @@ router.get('/allusers',requireLogin,(req,res) =>{
 
 router.put('/updateUser',requireLogin,(req,res) =>{
 
-    const {userId,email,name,role} = req.body
+    const {userId,email,name,role,profilePic} = req.body
     const payload ={
         ...(email && {email:email}),
         ...(name && {name:name}),
         ...(role && {role:role}),
+        ...(profilePic && {profilePic:profilePic})
     }
 
     userModel.findByIdAndUpdate(userId,payload,{
         new:true
     })
-    .select("name _id email role createdAt")
+    .select("name _id email role createdAt profilePic")
     .then(result =>{
         res.json({data:result,msg:"user updated"})
     }).catch((err) =>{
