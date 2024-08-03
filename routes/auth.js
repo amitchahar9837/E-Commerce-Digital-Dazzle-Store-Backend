@@ -37,8 +37,10 @@ const sendResetPasswordMail = async (name, email, token) => {
 }
 router.post('/signup', async (req, res) => {
     const { name, email, password, profilePic } = req.body;
-    if (!name || !email || !password || !profilePic) {
+    if (!name || !email || !password) {
         return res.status(422).json({ err: "Please add all the fields" })
+    }else if(!profilePic){
+        return res.status(422).json({err:"Please upload your photo"})
     }
     userModel.findOne({ email: email })
         .then((exist) => {

@@ -8,7 +8,7 @@ router.post('/addToCart', requireLogin, async (req, res) => {
         const { productId } = req.body;
         const userId = req.user.id;
 
-        const isAvailableItem = await cartModel.findOne({productId});
+        const isAvailableItem = await cartModel.findOne({productId,userId});
         if (isAvailableItem) {
             throw new Error("Item Already Exist");
         }
@@ -17,7 +17,7 @@ router.post('/addToCart', requireLogin, async (req, res) => {
             quantity: 1,
             userId,
         }
-        const newItem = await new cartModel(payload);
+        const newItem = new cartModel(payload);
 
         const addedItem = await newItem.save();
 
